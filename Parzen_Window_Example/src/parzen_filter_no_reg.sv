@@ -10,7 +10,7 @@ module parzen_filter_no_reg #(
 ) (
   input                              clk,
   input                              rst,
-  output logic [COEFF_INT_BITS-1:-COEFF_FRAC_BITS] window_out,
+  output [COEFF_INT_BITS-1:-COEFF_FRAC_BITS] window_out,
   output                             window_out_valid
 
 );
@@ -82,43 +82,71 @@ assign abs_n[-1:-B_FRAC_BITS] = '0;
 logic [B_INT_BITS-1:-B_FRAC_BITS] b_coeff_f;
 assign b_coeff_f = abs_n >>> (WINDOW_SIZE_POW2-1);
 
-logic [B2_INT_BITS-1:-B2_FRAC_BITS] b2_coeff_f;
 
-assign b2_coeff_f = b_coeff_f * b_coeff_f;
+logic [B2_INT_BITS-1:-B2_FRAC_BITS] b2_coeff_f;
+logic [B3_INT_BITS-1:-B3_FRAC_BITS] b3_coeff_f;
 
 logic [B_INT_BITS-1:-B_FRAC_BITS] b_coeff_f_z;
+logic [B_INT_BITS-1:-B_FRAC_BITS] b_coeff_f_z2;
 logic [B_INT_BITS-1:-B_FRAC_BITS] b2_coeff_f_z;
+logic [B_INT_BITS-1:-B_FRAC_BITS] b3_coeff_f_z;
 
+//B2 computation
+always @(posedge clk)
+begin
+    if (rst)begin
+        b2_coeff_f <= '0;
+    end
+    else begin
+        //1st Pipeline
+         b2_coeff_f  <= b_coeff_f * b_coeff_f;
+    end
+end
+
+//B1 delay for B3 computation
 always @(posedge clk)
 begin
     if (rst)begin
         b_coeff_f_z <= '0;
-        b2_coeff_f_z <= '0;
     end
     else begin
          b_coeff_f_z <= b_coeff_f;
-         b2_coeff_f_z <= b2_coeff_f;
     end
 end
-logic [B3_INT_BITS-1:-B3_FRAC_BITS] b3_coeff_f;
 
-assign b3_coeff_f = b2_coeff_f_z * b_coeff_f_z;
-logic [B_INT_BITS-1:-B_FRAC_BITS] b3_coeff_f_z;
+
+//B3 computation using pipelining operation
 always @(posedge clk)
 begin
     if (rst)begin
-        b3_coeff_f_z <= '0;
+        b3_coeff_f   <= '0;
     end
     else begin
-         b3_coeff_f_z <= b3_coeff_f;
+         b3_coeff_f <= b2_coeff_f * b_coeff_f_z;
     end
 end
+
+
+//B1 and B2 Synchronization
+always @(posedge clk)
+begin
+    if (rst)begin
+        b2_coeff_f_z <= '0;
+        b_coeff_f_z2 <= '0;
+    end
+    else begin
+         b_coeff_f_z2 <= b_coeff_f_z;
+         b2_coeff_f_z <= b2_coeff_f[B_INT_BITS-1:-B_FRAC_BITS];
+    end
+end
+
+assign b3_coeff_f_z = b3_coeff_f[B_INT_BITS-1:-B_FRAC_BITS];
 
 logic [B_INT_BITS-1:-B_FRAC_BITS] b1_coeff; 
 logic [B_INT_BITS-1:-B_FRAC_BITS] b2_coeff;
 logic [B_INT_BITS-1:-B_FRAC_BITS] b3_coeff;
 
-assign b1_coeff = b_coeff_f_z;
+assign b1_coeff = b_coeff_f_z2;
 assign b2_coeff = b2_coeff_f_z[B_INT_BITS-1:-B_FRAC_BITS];
 assign b3_coeff = b3_coeff_f_z[B_INT_BITS-1:-B_FRAC_BITS];
 
@@ -128,10 +156,21 @@ logic [B_INT_BITS-1: -B_FRAC_BITS] c6b2_coeff;
 logic [B_INT_BITS-1: -B_FRAC_BITS] c6b3_coeff;
 logic [B_INT_BITS-1: -B_FRAC_BITS] c2b3_coeff;
 
-assign c6b1_coeff = b1_coeff*6;
-assign c6b2_coeff = b2_coeff*6;
-assign c6b3_coeff = b3_coeff*6;
-assign c2b3_coeff = b3_coeff*2;
+always @(posedge clk)
+begin
+    if (rst)begin
+        c6b1_coeff <= '0;
+        c6b2_coeff <= '0;
+        c6b3_coeff <= '0;
+        c2b3_coeff <= '0;
+    end
+    else begin
+        c6b1_coeff <= b1_coeff*6;
+        c6b2_coeff <= b2_coeff*6;
+        c6b3_coeff <= b3_coeff*6;
+        c2b3_coeff <= b3_coeff*2;
+    end
+end
 
 logic [B_INT_BITS-1:-B_FRAC_BITS] one_const;
 logic [B_INT_BITS-1:-B_FRAC_BITS] two_const;
@@ -156,19 +195,7 @@ logic  [B_INT_BITS-1:-B_FRAC_BITS] window_out_i;
 
 assign window_out_i = (f_n[WINDOW_SIZE_POW2-1:WINDOW_SIZE_POW2-2] > 0) ? f2 : f1;
 
-//assign window_out = window_out_i;
-
-always @(posedge clk)
-begin
-    if (rst)begin
-        window_out <= '0;
-    end
-    else begin
-         window_out <= window_out_i;
-    end
-end
-
-
+assign window_out = window_out_i;
 
 endmodule
 
