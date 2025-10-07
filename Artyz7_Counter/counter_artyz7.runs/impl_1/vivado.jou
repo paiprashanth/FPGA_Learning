@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2025.1 (64-bit)
+# SW Build 6140274 on Thu May 22 00:12:29 MDT 2025
+# IP Build 6138677 on Thu May 22 03:10:11 MDT 2025
+# SharedData Build 6139179 on Tue May 20 17:58:58 MDT 2025
+# Start of session at: Tue Oct  7 11:08:35 2025
+# Process ID         : 30004
+# Current directory  : C:/Users/Public/Xilinx_Vivado_Vitis/counter_artyz7/counter_artyz7.runs/impl_1
+# Command line       : vivado.exe -log counter_top.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source counter_top.tcl -notrace
+# Log file           : C:/Users/Public/Xilinx_Vivado_Vitis/counter_artyz7/counter_artyz7.runs/impl_1/counter_top.vdi
+# Journal file       : C:/Users/Public/Xilinx_Vivado_Vitis/counter_artyz7/counter_artyz7.runs/impl_1\vivado.jou
+# Running On         : LAPTOP-PrashanthPai
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26100
+# Processor Detail   : 12th Gen Intel(R) Core(TM) i5-1230U
+# CPU Frequency      : 1690 MHz
+# CPU Physical cores : 10
+# CPU Logical cores  : 12
+# Host memory        : 8268 MB
+# Swap memory        : 11279 MB
+# Total Virtual      : 19547 MB
+# Available Virtual  : 2961 MB
+#-----------------------------------------------------------
+source counter_top.tcl -notrace
