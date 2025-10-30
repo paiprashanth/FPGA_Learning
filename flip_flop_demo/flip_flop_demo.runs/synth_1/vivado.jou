@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2025.1 (64-bit)
+# SW Build 6140274 on Thu May 22 00:12:29 MDT 2025
+# IP Build 6138677 on Thu May 22 03:10:11 MDT 2025
+# SharedData Build 6139179 on Tue May 20 17:58:58 MDT 2025
+# Start of session at: Thu Oct 30 20:47:58 2025
+# Process ID         : 20752
+# Current directory  : C:/Users/Public/Xilinx_Vivado_Vitis/flip_flop_demo/flip_flop_demo.runs/synth_1
+# Command line       : vivado.exe -log flip_flop_demo.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source flip_flop_demo.tcl
+# Log file           : C:/Users/Public/Xilinx_Vivado_Vitis/flip_flop_demo/flip_flop_demo.runs/synth_1/flip_flop_demo.vds
+# Journal file       : C:/Users/Public/Xilinx_Vivado_Vitis/flip_flop_demo/flip_flop_demo.runs/synth_1\vivado.jou
+# Running On         : LAPTOP-PrashanthPai
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26100
+# Processor Detail   : 12th Gen Intel(R) Core(TM) i5-1230U
+# CPU Frequency      : 1690 MHz
+# CPU Physical cores : 10
+# CPU Logical cores  : 12
+# Host memory        : 8268 MB
+# Swap memory        : 11137 MB
+# Total Virtual      : 19405 MB
+# Available Virtual  : 2816 MB
+#-----------------------------------------------------------
+source flip_flop_demo.tcl -notrace
